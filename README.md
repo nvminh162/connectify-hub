@@ -21,3 +21,9 @@
     - Kafka
     - RabbitMQ
 
+### DevOps
++ `Docker`: một nền tảng mã nguồn mở để tự động hóa việc triển khai, mở rộng và quản lý các ứng dụng trong các container
++ `Kubernetes`: một hệ thống mã nguồn mở để tự động hóa việc triển khai, mở rộng và quản lý các ứng dụng containerized
++ `AWS/Azure/GCP`: các nhà cung cấp dịch vụ đám mây lớn, cung cấp các dịch vụ hạ tầng và nền tảng để triển khai và quản lý các ứng dụng trên đám mây
++ `Github Actions, Gitlab CI/CD`: các công cụ tích hợp liên tục và triển khai liên tục (CI/CD) để tự động hóa quá trình xây dựng, kiểm thử và triển khai ứng dụng
++ `Jenkin`: một công cụ mã nguồn mở để tự động hóa quá trình xây dựng, kiểm thử và triển khai ứng dụng

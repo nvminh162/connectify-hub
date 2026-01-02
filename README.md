@@ -1,5 +1,7 @@
 # Handlebook
 
+![Roadmap](./Spring%20boot%203%20Microservices%20road%20map.png)
+
 ### Spring cloud
 + `Api gateway, Load balencer`: giống layer đứng on top của tất cả các microservice dưới nó, chịu trách nhiệm định tuyến request, cân bằng tải giữa các microservice với nhau
 + `Http clients (OpenFeign, ...)`: giúp các microservice giao tiếp với nhau thông qua các API RESTful

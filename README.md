@@ -1,1 +1,8 @@
-# connectify-hub
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.x-brightgreen)
+![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue)
+![Kafka](https://img.shields.io/badge/Kafka-Event%20Driven-red)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-green)
+![MySQL](https://img.shields.io/badge/Database-MySQL-blue)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![React](https://img.shields.io/badge/Frontend-React-61dafb)

@@ -565,7 +565,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"john\",\r\n    \"password\": \"12345678\"\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1373,6 +1373,41 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testing",
+			"item": [
+				{
+					"name": "Profile service",
+					"item": [
+						{
+							"name": "get profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/profile/users/c1e5f84d-1c87-49ba-9735-573b1714f769",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"users",
+										"c1e5f84d-1c87-49ba-9735-573b1714f769"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Identify service",
+					"item": []
 				}
 			]
 		}

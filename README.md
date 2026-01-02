@@ -15,4 +15,9 @@
     - Bulkhead: một mẫu thiết kế để cô lập các phần của hệ thống nhằm ngăn chặn sự cố lan rộng
 + `Documenting with Swagger/OpenAPI`: tạo tài liệu API tự động cho các microservice, giúp các nhà phát triển dễ dàng hiểu và sử dụng các API
 
- 
+ ### Architecture
++ `DDD (Domain-Driven Design)`: một phương pháp thiết kế phần mềm tập trung vào việc hiểu và mô hình hóa miền nghiệp vụ (domain) của ứng dụng <thiết kế hệ thống theo Domain (Business), trong microservice chia nhỏ chịu trách nhiệm cho mỗi service/>
++ `Event Driven Architecture`: một kiến trúc phần mềm trong đó các thành phần giao tiếp với nhau thông qua việc phát và xử lý các sự kiện <hệ thống hoạt động theo event, khi có việc xảy ra event trickger các event không/>
+    - Kafka
+    - RabbitMQ
+

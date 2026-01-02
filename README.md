@@ -1,5 +1,6 @@
 # Handlebook
 
+![Roadmap](./Spring%20boot%203%20road%20map.png)
 ![Roadmap](./Spring%20boot%203%20Microservices%20road%20map.png)
 
 ### Spring cloud

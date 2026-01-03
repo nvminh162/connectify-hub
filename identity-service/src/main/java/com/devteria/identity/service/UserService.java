@@ -26,6 +26,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 @RequiredArgsConstructor
@@ -53,8 +55,13 @@ public class UserService {
 
         var profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
-        var profileApiResponse = profileClient.createProfile(profileRequest);
-        log.info(">>> Open Feign call: Profile request: {}", profileRequest);
+
+        // lấy token
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        var authHeader = servletRequestAttributes.getRequest().getHeader("Authorization");
+        log.info(">>> Authorization header: {}", authHeader);
+
+        var profileApiResponse = profileClient.createProfile(authHeader, profileRequest);
         log.info(">>> Open Feign call: Profile API response: {}", profileApiResponse);
 
         return userMapper.toUserResponse(user);

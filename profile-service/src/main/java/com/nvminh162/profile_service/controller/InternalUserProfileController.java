@@ -1,5 +1,6 @@
 package com.nvminh162.profile_service.controller;
 
+import com.nvminh162.profile_service.dto.reponse.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import com.nvminh162.profile_service.dto.reponse.UserProfileResponse;
@@ -18,7 +19,9 @@ public class InternalUserProfileController {
     UserProfileService userProfileService;
 
     @PostMapping
-    public UserProfileResponse createProfile(@RequestBody UserProfileCreationRequest request) {
-        return userProfileService.createUserProfile(request);
+    ApiResponse<UserProfileResponse> createProfile(@RequestBody UserProfileCreationRequest request) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.createUserProfile(request))
+                .build();
     }
 }

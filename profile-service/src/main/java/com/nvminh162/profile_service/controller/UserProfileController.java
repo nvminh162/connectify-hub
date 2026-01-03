@@ -1,5 +1,6 @@
 package com.nvminh162.profile_service.controller;
 
+import com.nvminh162.profile_service.dto.reponse.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 import com.nvminh162.profile_service.dto.reponse.UserProfileResponse;
@@ -20,12 +21,16 @@ public class UserProfileController {
     UserProfileService userProfileService;
 
     @GetMapping("/{profileId}")
-    public UserProfileResponse getProfile(@PathVariable String profileId) {
-        return userProfileService.getUserProfile(profileId);
+    ApiResponse<UserProfileResponse> getProfile(@PathVariable String profileId) {
+        return ApiResponse.<UserProfileResponse>builder()
+                .result(userProfileService.getUserProfile(profileId))
+                .build();
     }
 
     @GetMapping
-    List<UserProfileResponse> getAllProfiles() {
-        return userProfileService.getAllProfiles();
+    ApiResponse<List<UserProfileResponse>> getAllProfiles() {
+        return ApiResponse.<List<UserProfileResponse>>builder()
+                .result(userProfileService.getAllProfiles())
+                .build();
     }
 }

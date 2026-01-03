@@ -3,8 +3,6 @@ package com.devteria.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
-import com.devteria.identity.mapper.ProfileMapper;
-import com.devteria.identity.repository.httpclient.ProfileClient;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +16,11 @@ import com.devteria.identity.entity.Role;
 import com.devteria.identity.entity.User;
 import com.devteria.identity.exception.AppException;
 import com.devteria.identity.exception.ErrorCode;
+import com.devteria.identity.mapper.ProfileMapper;
 import com.devteria.identity.mapper.UserMapper;
 import com.devteria.identity.repository.RoleRepository;
 import com.devteria.identity.repository.UserRepository;
+import com.devteria.identity.repository.httpclient.ProfileClient;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +53,9 @@ public class UserService {
 
         var profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
-        System.out.println(profileRequest.toString());
-        var userProfileResponse = profileClient.createProfile(profileRequest);
-        log.info("Open Feign call: Profile created successfully: {}", userProfileResponse);
+        var profileApiResponse = profileClient.createProfile(profileRequest);
+        log.info(">>> Open Feign call: Profile request: {}", profileRequest);
+        log.info(">>> Open Feign call: Profile API response: {}", profileApiResponse);
 
         return userMapper.toUserResponse(user);
     }

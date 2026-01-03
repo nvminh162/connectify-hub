@@ -7,20 +7,23 @@ import com.nvminh162.api_gateway.service.IdentityService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -32,9 +35,23 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     IdentityService identityService;
     ObjectMapper objectMapper;
 
+    @NonFinal
+    String[] publicEndpoints = {
+            "/identity/auth/.*", //regex
+            "/identity/users/registration"
+    };
+
+    @Value("${app.api-prefix}")
+    @NonFinal
+    String apiPrefix;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("Enter authentication filter");
+
+        if (isPublicEndpoint(exchange.getRequest()))
+             return chain.filter(exchange);
+
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         if (CollectionUtils.isEmpty(authHeader)) {
@@ -47,21 +64,21 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         log.info("Token: {}", token);
 
         /*
-        * subscribe()
-        * Dùng để TIÊU THỤ dữ liệu
-        * Kết thúc pipeline
-        * Không dùng trong filter/controller
-        * */
+         * subscribe()
+         * Dùng để TIÊU THỤ dữ liệu
+         * Kết thúc pipeline
+         * Không dùng trong filter/controller
+         * */
         identityService.introspect(token).subscribe(introspectResponseApiResponse -> {
             log.info("Result introspect boolean: {}", introspectResponseApiResponse.getResult().isValid());
         });
 
         /*
-        * flatMap()
-        * Dùng để xử lý dữ liệu và TIẾP TỤC pipeline
-        * Trả về Mono / Flux
-        * Dùng trong WebFlux filter / controller
-        * */
+         * flatMap()
+         * Dùng để xử lý dữ liệu và TIẾP TỤC pipeline
+         * Trả về Mono / Flux
+         * Dùng trong WebFlux filter / controller
+         * */
         return identityService.introspect(token).flatMap(introspectResponseApiResponse -> {
             if (!introspectResponseApiResponse.getResult().isValid()) { // block 401
                 return unauthenticated(exchange.getResponse());
@@ -93,5 +110,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
+    }
+
+    private boolean isPublicEndpoint(ServerHttpRequest request) {
+        return Arrays.stream(publicEndpoints).anyMatch(s -> request.getURI().getPath().matches(apiPrefix + s));
     }
 }

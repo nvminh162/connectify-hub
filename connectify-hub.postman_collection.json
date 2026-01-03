@@ -666,7 +666,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZXZ0ZXJpYS5jb20iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTcxNDgxNjUxOCwiaWF0IjoxNzE0ODEyOTE4LCJqdGkiOiI0OTEwMGIwNi1jNzNkLTQwN2UtYmY4Ny1jZThjNzU2NzBhYzkiLCJzY29wZSI6IlJPTEVfQURNSU4ifQ.ZHXP4IHdggo0Y-vjqhGDal556N3vUWCqyzLq8aXIhuuF8vvqJ1DsdhpE_QtHCbMmjk8fe-EWjLzah1cnydtHZA\"\r\n}",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjoiUk9MRV9BRE1JTiIsImlzcyI6ImRldnRlcmlhLmNvbSIsImV4cCI6MTc2NzQzMDU1NywiaWF0IjoxNzY3NDI2OTU3LCJ1c2VySWQiOiJhNDEwZGY3MS04NjRkLTQ1MmQtODMyYS0xZGJiYzg1Nzg1MDgiLCJqdGkiOiI3Y2MxYzA0ZC1hMDY1LTQ5NWQtYmQwNC02ZGE4YzZjZjViZDYifQ.XdUFeQAMNoUGTY-7S_G7fV-LHcd35sQk3iJNt8-czAv90q8WmUm65lygY_9PGbqXgrHUVzi1DfQizNRMkiNQ2A\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1430,7 +1430,14 @@
 							"name": "get all profile (gateway)",
 							"request": {
 								"auth": {
-									"type": "noauth"
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjoiUk9MRV9BRE1JTiIsImlzcyI6ImRldnRlcmlhLmNvbSIsImV4cCI6MTc2NzQzMDcyMSwiaWF0IjoxNzY3NDI3MTIxLCJ1c2VySWQiOiJhNDEwZGY3MS04NjRkLTQ1MmQtODMyYS0xZGJiYzg1Nzg1MDgiLCJqdGkiOiI1MWQ3YjNiMy1kNTAzLTQxNDYtYjZjYy1jNzlkNjIzYzkwY2UifQ.kvreAi221ZZG9eJq01X9tScXfb_0VlPq3JeU1CXoEnExFM7lL7mgTnbFuoG4k_JgPOP_Ujz6JS1rmvRMk_wohA",
+											"type": "string"
+										}
+									]
 								},
 								"method": "GET",
 								"header": [],

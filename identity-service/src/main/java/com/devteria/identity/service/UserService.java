@@ -54,7 +54,8 @@ public class UserService {
         var profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
         System.out.println(profileRequest.toString());
-        profileClient.createProfile(profileRequest);
+        var userProfileResponse = profileClient.createProfile(profileRequest);
+        log.info("Open Feign call: Profile created successfully: {}", userProfileResponse);
 
         return userMapper.toUserResponse(user);
     }

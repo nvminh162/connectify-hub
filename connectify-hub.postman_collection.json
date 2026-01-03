@@ -1402,12 +1402,202 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "get profile (gateway)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/profile/users/481e3926-c506-4709-8a62-08af88f87872",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"users",
+										"481e3926-c506-4709-8a62-08af88f87872"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all profile (gateway)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/api/v1/profile/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create profile",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"city\": \"Ha Noi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/profile/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"profile",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create profile (gateway)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"city\": \"Ha Noi\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/profile/internal/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"internal",
+										"users"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
 					"name": "Identify service",
-					"item": []
+					"item": [
+						{
+							"name": "create User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjoiUk9MRV9BRE1JTiIsImlzcyI6ImRldnRlcmlhLmNvbSIsImV4cCI6MTc2NzQyMTU3NCwiaWF0IjoxNzY3NDE3OTc0LCJ1c2VySWQiOiJhNDEwZGY3MS04NjRkLTQ1MmQtODMyYS0xZGJiYzg1Nzg1MDgiLCJqdGkiOiIwYzdkMmFjMC00YWIxLTRhNGMtYjVkZi1kOWMwOTY0ZmRjYjcifQ.ijvpxp4sjy-cLtDVJuNBOAyd-wGnXrQCW7RzZ0FCNl8uNt3J5s8aZd_Hk3JBiFW_0VnzKp-kossabGO6hzBBrQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"nvm21inh16246\",\r\n    \"password\": \"12345678\",\r\n    \"firstName\": \"2099Nguyen\",\r\n    \"lastName\": \"Van Minh\",\r\n    \"dob\": \"2004-02-16\",\r\n    \"city\" : \"London\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/identity/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"identity",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create User (gateway)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjoiUk9MRV9BRE1JTiIsImlzcyI6ImRldnRlcmlhLmNvbSIsImV4cCI6MTc2NzQyMTU3NCwiaWF0IjoxNzY3NDE3OTc0LCJ1c2VySWQiOiJhNDEwZGY3MS04NjRkLTQ1MmQtODMyYS0xZGJiYzg1Nzg1MDgiLCJqdGkiOiIwYzdkMmFjMC00YWIxLTRhNGMtYjVkZi1kOWMwOTY0ZmRjYjcifQ.ijvpxp4sjy-cLtDVJuNBOAyd-wGnXrQCW7RzZ0FCNl8uNt3J5s8aZd_Hk3JBiFW_0VnzKp-kossabGO6hzBBrQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"nv2m216inh2162469\",\r\n    \"password\": \"12345678\",\r\n    \"firstName\": \"2099Nguyen\",\r\n    \"lastName\": \"Van Minh\",\r\n    \"dob\": \"2004-02-16\",\r\n    \"city\" : \"London\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8888/api/v1/identity/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"api",
+										"v1",
+										"identity",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}

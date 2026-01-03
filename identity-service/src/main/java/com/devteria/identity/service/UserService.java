@@ -56,12 +56,7 @@ public class UserService {
         var profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
 
-        // lấy token
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        var authHeader = servletRequestAttributes.getRequest().getHeader("Authorization");
-        log.info(">>> Authorization header: {}", authHeader);
-
-        var profileApiResponse = profileClient.createProfile(authHeader, profileRequest);
+        var profileApiResponse = profileClient.createProfile(profileRequest);
         log.info(">>> Open Feign call: Profile API response: {}", profileApiResponse);
 
         return userMapper.toUserResponse(user);

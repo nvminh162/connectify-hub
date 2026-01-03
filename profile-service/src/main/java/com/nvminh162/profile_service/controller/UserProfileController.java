@@ -1,17 +1,16 @@
 package com.nvminh162.profile_service.controller;
 
-import com.nvminh162.profile_service.dto.reponse.ApiResponse;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
 
+import com.nvminh162.profile_service.dto.reponse.ApiResponse;
 import com.nvminh162.profile_service.dto.reponse.UserProfileResponse;
-import com.nvminh162.profile_service.dto.request.UserProfileCreationRequest;
 import com.nvminh162.profile_service.service.UserProfileService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

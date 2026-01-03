@@ -1,14 +1,13 @@
 package com.nvminh162.profile_service.configuration;
 
-import com.nimbusds.jwt.SignedJWT;
-import org.springframework.beans.factory.annotation.Value;
+import java.text.ParseException;
+
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
+import com.nimbusds.jwt.SignedJWT;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {
@@ -16,19 +15,19 @@ public class CustomJwtDecoder implements JwtDecoder {
     public Jwt decode(String token) throws JwtException {
         // in microservice không cần vì bị duplicate với api gateway
         /*try {
-            var response = authenticationService.introspect(
-                    IntrospectRequest.builder().token(token).build());
+        	var response = authenticationService.introspect(
+        			IntrospectRequest.builder().token(token).build());
 
-            if (!response.isValid()) throw new JwtException("Token invalid");
+        	if (!response.isValid()) throw new JwtException("Token invalid");
         } catch (JOSEException | ParseException e) {
-            throw new JwtException(e.getMessage());
+        	throw new JwtException(e.getMessage());
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-            nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
-                    .macAlgorithm(MacAlgorithm.HS512)
-                    .build();
+        	SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
+        	nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
+        			.macAlgorithm(MacAlgorithm.HS512)
+        			.build();
         }
         return nimbusJwtDecoder.decode(token);*/
 
@@ -39,8 +38,7 @@ public class CustomJwtDecoder implements JwtDecoder {
                     signedJWT.getJWTClaimsSet().getIssueTime().toInstant(),
                     signedJWT.getJWTClaimsSet().getExpirationTime().toInstant(),
                     signedJWT.getHeader().toJSONObject(),
-                    signedJWT.getJWTClaimsSet().getClaims()
-            );
+                    signedJWT.getJWTClaimsSet().getClaims());
         } catch (ParseException e) {
             throw new JwtException("Invalid token");
         }

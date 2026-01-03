@@ -1,5 +1,6 @@
 package com.nvminh162.profile_service.service;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.nvminh162.profile_service.dto.reponse.UserProfileResponse;
@@ -35,6 +36,7 @@ public class UserProfileService {
         return userProfileMapper.toUserProfileResponse(userProfile);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserProfileResponse> getAllProfiles() {
         var profiles = userProfileRepository.findAll();
         return profiles.stream().map(userProfileMapper::toUserProfileResponse).toList();

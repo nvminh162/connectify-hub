@@ -1,6 +1,6 @@
-package com.nvminh162.notification_service.exception;
+package com.nvminh162.notification.exception;
 
-import com.nvminh162.notification_service.dto.ApiResponse;
+import com.nvminh162.notification.dto.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

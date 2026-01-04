@@ -1,4 +1,4 @@
-package com.nvminh162.notification_service.configuration;
+package com.nvminh162.notification.configuration;
 
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.security.oauth2.jwt.Jwt;

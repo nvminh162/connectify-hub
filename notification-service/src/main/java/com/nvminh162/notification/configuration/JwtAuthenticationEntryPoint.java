@@ -1,8 +1,8 @@
-package com.nvminh162.notification_service.configuration;
+package com.nvminh162.notification.configuration;
 
+import com.nvminh162.notification.dto.ApiResponse;
+import com.nvminh162.notification.exception.ErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nvminh162.notification_service.dto.ApiResponse;
-import com.nvminh162.notification_service.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;

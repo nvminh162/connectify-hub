@@ -1,4 +1,4 @@
-package com.nvminh162.notification_service.exception;
+package com.nvminh162.notification.exception;
 
 public class AppException extends RuntimeException {
 

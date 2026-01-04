@@ -1,4 +1,4 @@
-package com.nvminh162.notification_service.dto;
+package com.nvminh162.notification.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;

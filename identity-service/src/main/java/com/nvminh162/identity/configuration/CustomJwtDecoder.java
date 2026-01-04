@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
-import com.nvminh162.identity.service.AuthenticationService;
 import com.nimbusds.jwt.SignedJWT;
+import com.nvminh162.identity.service.AuthenticationService;
 
 @Component
 public class CustomJwtDecoder implements JwtDecoder {

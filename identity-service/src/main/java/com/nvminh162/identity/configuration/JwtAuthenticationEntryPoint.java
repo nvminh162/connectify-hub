@@ -9,9 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nvminh162.identity.dto.request.ApiResponse;
 import com.nvminh162.identity.exception.ErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override

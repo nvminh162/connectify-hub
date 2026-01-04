@@ -13,6 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.nvminh162.identity.dto.request.AuthenticationRequest;
 import com.nvminh162.identity.dto.request.IntrospectRequest;
 import com.nvminh162.identity.dto.request.LogoutRequest;
@@ -25,11 +30,6 @@ import com.nvminh162.identity.exception.AppException;
 import com.nvminh162.identity.exception.ErrorCode;
 import com.nvminh162.identity.repository.InvalidatedTokenRepository;
 import com.nvminh162.identity.repository.UserRepository;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

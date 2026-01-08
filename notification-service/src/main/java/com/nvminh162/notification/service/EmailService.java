@@ -25,14 +25,14 @@ import lombok.experimental.NonFinal;
 public class EmailService {
     EmailClient emailClient;
 
-    @Value("${app.brevo-key}")
+    @Value("${notification.email.brevo-apikey}")
     @NonFinal
     String apiKey;
 
     public EmailResponse sendEmail(SendEmailRequest request) {
         EmailRequest emailRequest = EmailRequest.builder()
                 .sender(Sender.builder()
-                        .name("nvminh162 DotCom")
+                        .name("nvminh162dotcom")
                         .email("nvminh162@gmail.com")
                         .build())
                 .to(List.of(request.getTo()))

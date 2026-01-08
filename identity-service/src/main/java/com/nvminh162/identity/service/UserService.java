@@ -3,11 +3,14 @@ package com.nvminh162.identity.service;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nvminh162.event.dto.NotificationEvent;
 import com.nvminh162.identity.constant.PredefinedRole;
 import com.nvminh162.identity.dto.request.UserCreationRequest;
 import com.nvminh162.identity.dto.request.UserUpdateRequest;
@@ -35,29 +38,46 @@ public class UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     UserMapper userMapper;
+    ProfileMapper profileMapper;
     PasswordEncoder passwordEncoder;
     ProfileClient profileClient;
-    ProfileMapper profileMapper;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public UserResponse createUser(UserCreationRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
-
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         HashSet<Role> roles = new HashSet<>();
+
         roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
 
         user.setRoles(roles);
-        user = userRepository.save(user);
+        user.setEmailVerified(false);
+
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
 
         var profileRequest = profileMapper.toProfileCreationRequest(request);
         profileRequest.setUserId(user.getId());
 
-        var profileApiResponse = profileClient.createProfile(profileRequest);
-        log.info(">>> Open Feign call: Profile API response: {}", profileApiResponse);
+        var profile = profileClient.createProfile(profileRequest);
 
-        return userMapper.toUserResponse(user);
+        NotificationEvent notificationEvent = NotificationEvent.builder()
+                .channel("EMAIL")
+                .recipient(request.getEmail())
+                .subject("Welcome to bookteria")
+                .body("Hello, " + request.getUsername())
+                .build();
+
+        // Publish message to kafka
+        kafkaTemplate.send("notification-delivery", notificationEvent);
+
+        var userCreationReponse = userMapper.toUserResponse(user);
+        userCreationReponse.setId(profile.getResult().getId());
+
+        return userCreationReponse;
     }
 
     public UserResponse getMyInfo() {

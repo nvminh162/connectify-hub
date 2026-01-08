@@ -8,7 +8,7 @@
 		<version>3.2.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.devteria</groupId>
+	<groupId>com.nvminh162</groupId>
 	<artifactId>notification-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>notification-service</name>
@@ -25,6 +25,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -57,12 +61,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<!-- Dotenv for loading .env file -->
-		<dependency>
-			<groupId>io.github.cdimascio</groupId>
-			<artifactId>dotenv-java</artifactId>
-			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -141,10 +139,10 @@
 				</executions>
 				<configuration>
 					<excludes>
-						<exclude>com/devteria/profile/dto/**</exclude>
-						<exclude>com/devteria/profile/entity/**</exclude>
-						<exclude>com/devteria/profile/mapper/**</exclude>
-						<exclude>com/devteria/profile/configuration/**</exclude>
+						<exclude>com/nvminh162/profile/dto/**</exclude>
+						<exclude>com/nvminh162/profile/entity/**</exclude>
+						<exclude>com/nvminh162/profile/mapper/**</exclude>
+						<exclude>com/nvminh162/profile/configuration/**</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

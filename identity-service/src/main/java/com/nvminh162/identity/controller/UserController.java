@@ -17,6 +17,8 @@ import com.nvminh162.identity.dto.request.UserUpdateRequest;
 import com.nvminh162.identity.entity.User;
 import com.nvminh162.identity.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody UserCreationRequest request) {
+    public User createUser(@RequestBody @Valid UserCreationRequest request) {
         return userService.createUser(request);
     }
 

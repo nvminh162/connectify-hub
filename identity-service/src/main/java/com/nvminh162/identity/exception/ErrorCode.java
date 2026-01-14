@@ -3,10 +3,10 @@ package com.nvminh162.identity.exception;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error"),
     INVALID_KEY(1001, "Key enum is invalid"),
-    USER_NOT_FOUND(1001, "User not found"),
-    INVALID_USERNAME(1002, "Username is invalid"),
-    INVALID_PASSWORD(1003, "Password is invalid"),
-    USERNAME_ALREADY_EXISTS(1004, "Username already exists")
+    USER_NOT_FOUND(1002, "User not found"),
+    USERNAME_ALREADY_EXISTS(1003, "Username already exists"),
+    INVALID_USERNAME(1004, "Username is invalid"),
+    INVALID_PASSWORD(1005, "Password is invalid"),
     ;
 
     private int code;

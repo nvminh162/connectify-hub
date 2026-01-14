@@ -2,6 +2,8 @@ package com.nvminh162.identity.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nvminh162.identity.dto.request.UserCreationRequest;
@@ -28,8 +30,11 @@ public class UserService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
-
         User user = userMapper.toUser(request);
+        // default is 10
+        // càng lốn độ mạnh mật khẩu càng cao => ảnh hưởng performance nếu đặt lớn => yêu cầu mã hoá dưới 1s tuỳ yêu cầu system
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);
     }
 

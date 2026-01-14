@@ -20,4 +20,4 @@ spring:
         format_sql: true
 
 jwt: # openssl rand -base64 64
-  signer-key: 
+  signer-key: ${JWT_SIGNER_KEY}

@@ -44,7 +44,7 @@ public class AuthenticationService {
 
     @NonFinal
     @Value("${jwt.signer-key}")
-    protected String SIGNER_KEY;
+    private String SIGNER_KEY;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository.findByUsername(request.getUsername())

@@ -15,7 +15,6 @@ import com.nvminh162.identity.dto.ApiResponse;
 import com.nvminh162.identity.dto.request.UserCreationRequest;
 import com.nvminh162.identity.dto.request.UserUpdateRequest;
 import com.nvminh162.identity.dto.response.UserResponse;
-import com.nvminh162.identity.entity.User;
 import com.nvminh162.identity.service.UserService;
 
 import jakarta.validation.Valid;
@@ -31,25 +30,35 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> response = new ApiResponse<User>();
-        response.setResult(userService.createUser(request));
-        return response;
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        var result = userService.createUser(request);
+        return ApiResponse.<UserResponse>builder()
+                .result(result)
+                .build();
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public ApiResponse<List<UserResponse>> getUsers() {
+        var result = userService.getUsers();
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(result)
+                .build();
     }
 
     @GetMapping("/{userId}")
-    public UserResponse getUser(@PathVariable("userId") String userId) {
-        return userService.getUser(userId);
+    public ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
+        var result = userService.getUser(userId);
+        return ApiResponse.<UserResponse>builder()
+                .result(result)
+                .build();
     }
 
     @PutMapping("/{userId}")
-    public UserResponse updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
-        return userService.updateUser(userId, request);
+    public ApiResponse<UserResponse> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+        var result = userService.updateUser(userId, request);
+        return ApiResponse.<UserResponse>builder()
+                .result(result)
+                .build();
     }
 
     @DeleteMapping("/{userId}")

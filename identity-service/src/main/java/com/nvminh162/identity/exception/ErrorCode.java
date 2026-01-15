@@ -17,6 +17,7 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(1005, "Username already exists", HttpStatus.BAD_REQUEST), // 400
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED), // 401
     UNAUTHORIZED(1007, "You have no permission to access this resource", HttpStatus.FORBIDDEN), // 403
+    INVALID_DOB(1008, "Invalid date of birth", HttpStatus.BAD_REQUEST), // 400
     ;
 
     private int code;

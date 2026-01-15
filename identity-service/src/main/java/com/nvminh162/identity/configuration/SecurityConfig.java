@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,10 +19,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.nvminh162.identity.enums.Role;
-
 @Configuration
 @EnableWebSecurity // options: có thể có hoặc không có
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Value("${jwt.signer-key}")
@@ -41,7 +41,8 @@ public class SecurityConfig {
                     /* Cách 1: Default is SCOPE_ => custom jwtAuthenticationConverter() => ROLE_ */
                     // .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ROLE_ADMIN") /* ROLE_ADMIN */
                     /* Cách 2: hasRole(Role.ADMIN.name()) => Role.ADMIN.name() là enum Role của admin */
-                    .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name()) /* ADMIN */
+                    // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name()) /* ADMIN */
+                    /* Cách 3: Phân quyền trên method */
                     .anyRequest().authenticated();
         });
 

@@ -4,11 +4,13 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -24,6 +26,7 @@ import com.nvminh162.identity.dto.request.AuthenticationRequest;
 import com.nvminh162.identity.dto.request.IntrospectRequest;
 import com.nvminh162.identity.dto.response.AuthenticationResponse;
 import com.nvminh162.identity.dto.response.IntrospectResponse;
+import com.nvminh162.identity.entity.User;
 import com.nvminh162.identity.exception.AppException;
 import com.nvminh162.identity.exception.ErrorCode;
 import com.nvminh162.identity.repository.UserRepository;
@@ -55,7 +58,7 @@ public class AuthenticationService {
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        var token = generateToken(user.getUsername());
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .authenticated(true)
@@ -79,16 +82,15 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512); // nội dung các thuật toán sử dụng
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username) // đại diện user đăng nhập
+                .subject(user.getUsername()) // đại diện user đăng nhập
                 .issuer("nvminh162.com") // xác định token issue từ ai? thườngg là domain của service
                 .issueTime(new Date()) // thời gian hiện tại
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())) // thời gian hết hạn
-                .claim("customClaim", "customValue") // claim là dữ liệu bổ sung cho token, nó có thể là bất kỳ loại dữ
-                                                     // liệu nào
+                .claim("scope", buildScope(user)) // claim là dữ liệu bổ sung cho token, nó có thể là bất kỳ loại dữ liệu nào
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
@@ -100,5 +102,12 @@ public class AuthenticationService {
             log.error("Cannot generate token: {}", e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+    private String buildScope(User user) {
+        StringJoiner joiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(joiner::add);
+        return joiner.toString();
     }
 }

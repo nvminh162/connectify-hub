@@ -1,5 +1,6 @@
 package com.nvminh162.identity.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import com.nvminh162.identity.dto.request.UserCreationRequest;
 import com.nvminh162.identity.dto.request.UserUpdateRequest;
 import com.nvminh162.identity.dto.response.UserResponse;
 import com.nvminh162.identity.entity.User;
+import com.nvminh162.identity.enums.Role;
 import com.nvminh162.identity.exception.AppException;
 import com.nvminh162.identity.exception.ErrorCode;
 import com.nvminh162.identity.mapper.UserMapper;
@@ -26,16 +28,20 @@ import lombok.experimental.FieldDefaults;
 public class UserService {
     UserRepository userRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
         }
         User user = userMapper.toUser(request);
-        // default is 10
-        // càng lốn độ mạnh mật khẩu càng cao => ảnh hưởng performance nếu đặt lớn => yêu cầu mã hoá dưới 1s tuỳ yêu cầu system
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
+
         return userMapper.toUserResponse(userRepository.save(user));
     }
 

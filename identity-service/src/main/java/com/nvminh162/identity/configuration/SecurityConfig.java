@@ -19,6 +19,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import tools.jackson.databind.ObjectMapper;
+
 @Configuration
 @EnableWebSecurity // options: có thể có hoặc không có
 @EnableMethodSecurity
@@ -26,6 +28,12 @@ public class SecurityConfig {
 
     @Value("${jwt.signer-key}")
     private String SIGNER_KEY;
+
+    private final ObjectMapper objectMapper;
+
+    public SecurityConfig(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     private static final String[] PUBLIC_ENDPOINTS = {
             "/users",
@@ -47,7 +55,7 @@ public class SecurityConfig {
         });
 
         /*
-        Đăng ký với provider manager support jwt token 
+        Đăng ký với provider manager support jwt token
         => khi thực hiện request cung cấp token vào header Authorization: Bearer <token>
         => jwt authentication thực hiện authentication dựa trên token
         */
@@ -60,6 +68,10 @@ public class SecurityConfig {
                     /* Converter tùy chỉnh để map scope thành authorities */
                     .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
+                /* Cấu hình này bắt exception khi user không truyền token */
+                /* Xử lý 401 exception ở trên tầng filter mà exception handler không xử lý được */
+                /* AuthenticationEntryPoint: khi authentication fail sẽ điều hướng đi đâu? => ở đây chỉ cần trả về error response */
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint())
         );
 
         /*
@@ -101,5 +113,10 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
+    }
+
+    @Bean
+    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint(objectMapper);
     }
 }

@@ -4,6 +4,7 @@ package com.nvminh162.identity.dto.response;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.nvminh162.identity.entity.Role;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,5 @@ public class UserResponse {
     String firstName;
     String lastName;
     LocalDate dob;
-    Set<String> roles;
+    Set<Role> roles;
 }

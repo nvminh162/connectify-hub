@@ -21,3 +21,5 @@ spring:
 
 jwt: # openssl rand -base64 64
   signer-key: ${JWT_SIGNER_KEY}
+  valid-duration: ${VALID_DURATION}
+  refreshable-duration: ${REFRESHABLE_DURATION}

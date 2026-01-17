@@ -5,7 +5,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
+import java.util.UUID;
 
+import com.nvminh162.identity.dto.request.LogoutRequest;
+import com.nvminh162.identity.entity.InvalidatedToken;
+import com.nvminh162.identity.repository.InvalidatedTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
 
     UserRepository userRepository;
+    InvalidatedTokenRepository invalidatedTokenRepository;
 
     @NonFinal
     @Value("${jwt.signer-key}")
@@ -68,18 +73,49 @@ public class AuthenticationService {
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         String token = request.getToken();
+        boolean isValiid = true;
 
+        try {
+            verifyToken(token);
+        } catch (AppException e) {
+            isValiid = false;
+        }
+
+        return IntrospectResponse.builder()
+                .valid(isValiid)
+                .build();
+    }
+
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        var signToken = verifyToken(request.getToken());
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    private SignedJWT verifyToken(String token) throws ParseException, JOSEException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
-
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime(); // lấy thời gian hết hạn
-
         var verified = signedJWT.verify(verifier); // boolean
 
-        return IntrospectResponse.builder()
-                .valid(verified && expiryTime.after(new Date()))
-                .build();
+        if (!(verified && expiryTime.after(new Date()))) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return signedJWT;
     }
 
     private String generateToken(User user) {
@@ -91,6 +127,7 @@ public class AuthenticationService {
                 .issueTime(new Date()) // thời gian hiện tại
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())) // thời gian hết hạn
                 .claim("scope", buildScope(user)) // claim là dữ liệu bổ sung cho token, nó có thể là bất kỳ loại dữ liệu nào
+                .jwtID(UUID.randomUUID().toString()) // thêm claim jti là chuoỗi 36 ký tự UUID để lưu vào CSDL nếu logout
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 

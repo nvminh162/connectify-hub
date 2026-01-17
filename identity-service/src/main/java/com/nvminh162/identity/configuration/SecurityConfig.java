@@ -1,8 +1,7 @@
 package com.nvminh162.identity.configuration;
 
-import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,9 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,21 +20,17 @@ import tools.jackson.databind.ObjectMapper;
 @Configuration
 @EnableWebSecurity // options: có thể có hoặc không có
 @EnableMethodSecurity
+@RequiredArgsConstructor
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class SecurityConfig {
-
-    @Value("${jwt.signer-key}")
-    private String SIGNER_KEY;
-
-    private final ObjectMapper objectMapper;
-
-    public SecurityConfig(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    ObjectMapper objectMapper;
+    CustomJwtDecoder jwtDecoder;
 
     private static final String[] PUBLIC_ENDPOINTS = {
             "/users",
             "/auth/token",
-            "/auth/introspect"
+            "/auth/introspect",
+            "/auth/logout"
     };
 
     @Bean
@@ -64,7 +56,7 @@ public class SecurityConfig {
                 /* options: .jwkSetUri(null): cấu hình với resource server thứ3 cần url này
                 => dùng decoder để decode token do hệ thống generate token */
                 .jwt(jwtConfigurer -> jwtConfigurer
-                    .decoder(jwtDecoder())
+                    .decoder(jwtDecoder)
                     /* Converter tùy chỉnh để map scope thành authorities */
                     .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
@@ -83,14 +75,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+    /*
+    * Chịu trách nhiệm verify token*/
+    /*=> dùng CustomJwtDecoder chèn thêm buước introspect check logout*/
+    /*@Bean
     JwtDecoder jwtDecoder() {
         SecretKeySpec secretKey = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
         return NimbusJwtDecoder
             .withSecretKey(secretKey)
             .macAlgorithm(MacAlgorithm.HS512)
             .build();
-    }
+    }*/
 
     /*
     Default is 10
@@ -107,7 +102,7 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+//        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_"); // đã thêm ở buildScope(User user)
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

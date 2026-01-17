@@ -8,6 +8,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 import com.nvminh162.identity.dto.request.LogoutRequest;
+import com.nvminh162.identity.dto.request.RefreshRequest;
 import com.nvminh162.identity.entity.InvalidatedToken;
 import com.nvminh162.identity.repository.InvalidatedTokenRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -150,5 +151,33 @@ public class AuthenticationService {
                     role.getPermissions().forEach(permission -> joiner.add(permission.getName()));
             });
         return joiner.toString();
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request)
+            throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user = userRepository.findByUsername(username).orElseThrow(
+                () -> new AppException(ErrorCode.UNAUTHENTICATED)
+        );
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
     }
 }

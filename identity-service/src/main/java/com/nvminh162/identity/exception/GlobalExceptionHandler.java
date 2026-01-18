@@ -1,7 +1,10 @@
 package com.nvminh162.identity.exception;
 
+import java.util.Map;
+import java.util.Objects;
+
 import jakarta.validation.ConstraintViolation;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,8 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.nvminh162.identity.dto.ApiResponse;
 
-import java.util.Map;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
 @Slf4j
@@ -58,7 +60,8 @@ public class GlobalExceptionHandler {
 
         try {
             errorCode = ErrorCode.valueOf(enumKey);
-            var contraintViolation = ex.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
+            var contraintViolation =
+                    ex.getBindingResult().getAllErrors().getFirst().unwrap(ConstraintViolation.class);
             attributes = contraintViolation.getConstraintDescriptor().getAttributes();
             log.info(attributes.toString());
         } catch (IllegalArgumentException e) {
@@ -67,7 +70,10 @@ public class GlobalExceptionHandler {
 
         ApiResponse<?> response = ApiResponse.builder()
                 .code(errorCode.getCode())
-                .message(Objects.nonNull(attributes) ? mapAttribute(errorCode.getMessage(), attributes) : errorCode.getMessage())
+                .message(
+                        Objects.nonNull(attributes)
+                                ? mapAttribute(errorCode.getMessage(), attributes)
+                                : errorCode.getMessage())
                 .build();
         return ResponseEntity.status(errorCode.getStatusCode()).body(response);
     }

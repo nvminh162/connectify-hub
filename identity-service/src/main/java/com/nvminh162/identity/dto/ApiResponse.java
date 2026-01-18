@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse<T> {
     @Default
     private int code = 1000;
+
     private String message;
     private T result;
 }

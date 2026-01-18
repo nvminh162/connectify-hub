@@ -1,17 +1,19 @@
 package com.nvminh162.identity.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.nvminh162.identity.dto.request.PermissionRequest;
 import com.nvminh162.identity.dto.response.PermissionResponse;
 import com.nvminh162.identity.entity.Permission;
 import com.nvminh162.identity.mapper.PermissionMapper;
 import com.nvminh162.identity.repository.PermissionRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +23,18 @@ public class PermissionService {
     PermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
 
-    public PermissionResponse create(PermissionRequest request){
+    public PermissionResponse create(PermissionRequest request) {
         Permission permission = permissionMapper.toPermission(request);
         permission = permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);
     }
 
-    public List<PermissionResponse> getAll(){
+    public List<PermissionResponse> getAll() {
         var permissions = permissionRepository.findAll();
         return permissions.stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
-    public void delete(String permission){
+    public void delete(String permission) {
         permissionRepository.deleteById(permission);
     }
 }

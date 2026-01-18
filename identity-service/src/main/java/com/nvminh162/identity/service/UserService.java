@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.nvminh162.identity.repository.RoleRepository;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +18,7 @@ import com.nvminh162.identity.enums.Role;
 import com.nvminh162.identity.exception.AppException;
 import com.nvminh162.identity.exception.ErrorCode;
 import com.nvminh162.identity.mapper.UserMapper;
+import com.nvminh162.identity.repository.RoleRepository;
 import com.nvminh162.identity.repository.UserRepository;
 
 import lombok.AccessLevel;
@@ -41,7 +41,7 @@ public class UserService {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
         User user = userMapper.toUser(request);
-        
+
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<String> roles = new HashSet<>();
@@ -53,12 +53,10 @@ public class UserService {
     }
 
     /* PreAuthorize: In charge trước khi method thực hiện => Kiểm tra quyền trước khi thực hiện method */
-//  @PreAuthorize("hasAuthority('APPROVE_POST')")
+    //  @PreAuthorize("hasAuthority('APPROVE_POST')")
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toUserResponse)
-                .collect(Collectors.toList());
+        return userRepository.findAll().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
 
     /* PostAuthorize: In charge sau khi method thực hiện => Kiểm tra quyền sau khi thực hiện method */
@@ -73,7 +71,8 @@ public class UserService {
         var context = SecurityContextHolder.getContext();
         log.info("Context: {}", context);
         String name = context.getAuthentication().getName();
-        return userMapper.toUserResponse(userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
+        return userMapper.toUserResponse(
+                userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
     public UserResponse updateUser(String userId, UserUpdateRequest request) {

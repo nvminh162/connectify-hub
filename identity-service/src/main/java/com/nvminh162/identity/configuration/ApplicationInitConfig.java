@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplicationInitConfig {
 
     PasswordEncoder passwordEncoder;
-    
+
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
@@ -32,10 +32,10 @@ public class ApplicationInitConfig {
                 roles.add(Role.ADMIN.name());
 
                 User user = User.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("123456789"))
-//                    .roles(roles)
-                    .build();
+                        .username("admin")
+                        .password(passwordEncoder.encode("123456789"))
+                        //                    .roles(roles)
+                        .build();
                 userRepository.save(user);
                 log.info("Admin user created successfully");
             }

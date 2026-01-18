@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.nvminh162.identity.validator.DobConstraint;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,6 @@ public class UserUpdateRequest {
 
     @DobConstraint(min = 18, message = "INVALID_DOB")
     LocalDate dob;
+
     List<String> roles;
 }

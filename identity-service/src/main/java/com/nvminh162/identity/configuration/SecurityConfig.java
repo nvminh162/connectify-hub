@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -67,7 +70,38 @@ public class SecurityConfig {
         => config để disable csrf */
         http.csrf(AbstractHttpConfigurer::disable);
 
+        /*
+        Cấu hình CORS để cho phép các request từ các origin khác nhau
+        => Cần thiết khi frontend và backend chạy trên các domain/port khác nhau
+        */
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        // Cho phép tất cả các origin (trong production nên chỉ định cụ thể)
+        // Sử dụng addAllowedOriginPattern thay vì addAllowedOrigin để tương thích với credentials
+        corsConfiguration.addAllowedOriginPattern("*");
+        // Cho phép tất cả các HTTP methods
+        corsConfiguration.addAllowedMethod("*");
+        // Cho phép tất cả các headers (bao gồm Authorization header cho JWT)
+        corsConfiguration.addAllowedHeader("*");
+        // Cho phép gửi credentials (cần thiết nếu frontend gửi cookies)
+        // Lưu ý: Khi set true, phải dùng addAllowedOriginPattern thay vì addAllowedOrigin
+        corsConfiguration.setAllowCredentials(true);
+        // Thời gian cache preflight request (1 giờ)
+        corsConfiguration.setMaxAge(3600L);
+        // Cho phép expose các headers trong response (cần thiết để frontend đọc được)
+        corsConfiguration.addExposedHeader("*");
+
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
+        return urlBasedCorsConfigurationSource;
     }
 
     /*

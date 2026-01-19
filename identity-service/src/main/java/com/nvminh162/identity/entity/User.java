@@ -25,7 +25,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
+    // uniqure không phân biệt chữ hoa thường
+    @Column(unique = true, name = "username", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
+
     String password;
     String firstName;
     LocalDate dob;

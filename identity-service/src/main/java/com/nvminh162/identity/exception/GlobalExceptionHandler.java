@@ -23,12 +23,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiResponse<?>> handleException(RuntimeException ex) {
+        log.error("Exception: ", ex);
         ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
         ApiResponse<?> response = ApiResponse.builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();
-        return ResponseEntity.status(errorCode.getStatusCode()).body(response);
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(value = AppException.class)

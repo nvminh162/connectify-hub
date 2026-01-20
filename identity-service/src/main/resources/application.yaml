@@ -7,9 +7,9 @@ spring:
   application:
     name: identity-service
   datasource:
-    url: jdbc:mysql://localhost:3306/identity_service
-    username: root
-    password: root
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/identity_service}
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_USERNAME:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -20,6 +20,6 @@ spring:
         format_sql: true
 
 jwt: # openssl rand -base64 64
-  signer-key: ${JWT_SIGNER_KEY}
-  valid-duration: ${VALID_DURATION}
-  refreshable-duration: ${REFRESHABLE_DURATION}
+  signer-key: ${JWT_SIGNER_KEY:WL4EjoUlxLJDtuWBfz20NflAIgFjC6xNR6zmkrGh1HFy5rQNy9oIF/npA5nHyJLHp6Gc53srOY9F8FY0XGBGTg==}
+  valid-duration: ${VALID_DURATION:0}
+  refreshable-duration: ${REFRESHABLE_DURATION:0}

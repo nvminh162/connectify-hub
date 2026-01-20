@@ -64,6 +64,10 @@ public class AuthenticationService {
     long REFRESHABLE_DURATION;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.info("TEST LOG SIGNER_KEY: {}", SIGNER_KEY);
+        log.info("TEST LOG VALID_DURATION: {}", VALID_DURATION);
+        log.info("TEST LOG REFRESHABLE_DURATION: {}", REFRESHABLE_DURATION);
+
         var user = userRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
